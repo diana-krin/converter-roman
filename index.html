@@ -1,0 +1,77 @@
+<html ng-app="myApp" >
+<script src="scripts/angular.min.js"></script>
+<head>
+	<title>Roman numerals converter</title>
+</head>
+<body>
+	<style type="text/css">
+		#block_container
+		{
+			text-align:center;
+			display:flex;
+			align-items: center;
+			justify-content: center;
+			background-color: gray;
+			width: 600px;
+			padding: 5px;
+		}
+		#bloc1, #bloc2
+		{
+			display:inline;
+			width: 250px;
+			height: 100px;
+		}
+		#bloc3
+		{
+			width: 100px;
+			height: 100px;
+			display:flex;
+			align-items: center;
+			justify-content: center;
+		}
+		textarea 
+		{
+			resize: none;
+		}
+	</style>
+	<h1>Roman numerals converter</h1>
+	<h3>Enter the Roman numeral or number and press the Convert button</h3>
+	<div ng-controller="AngularCtrl" id="block_container">
+		<div id="bloc1">
+			<textarea ng-model="in_number" rows="6" cols="32"></textarea>
+		</div>
+		<div id="bloc3">
+			<button ng-click="change()">Convert</button>
+		</div>
+		<div id="bloc2">
+			<textarea rows="6" cols="32" readonly>{{out_number}}</textarea>
+		</div>
+	</div>
+	<script>
+var app = angular.module('myApp', [])
+app.controller('AngularCtrl',
+function($scope, $http, $httpParamSerializerJQLike)
+{
+    $scope.in_number = "";
+    $scope.change = function()
+	{
+        $http(
+		{
+			method: "POST",
+			url: "http://127.0.0.1:5000/",
+			data: $httpParamSerializerJQLike({ 
+				number: $scope.in_number
+			}),
+			headers: {"Content-Type": "application/x-www-form-urlencoded"}
+		}).then(function(response)
+		{
+			$scope.out_number = response.data;
+		}).catch(function(response)
+		{
+			$scope.out_number = "ERROR";
+		})
+    }
+});
+</script>
+</body>
+</html>
